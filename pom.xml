@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+  	<groupId>org.infodancer</groupId>
+  	<artifactId>defaults</artifactId>
+  	<version>0.0.1-SNAPSHOT</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.infodancer.bootstrap</groupId>
+  <artifactId>bootstrap</artifactId>
+  <version>0.0.3-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>bootstrap</name>
+  <url>http://www.infodancer.org/srcdancer/project/bootstrap</url>
+  <description>The bootstrap project is a way to start a java application with a classpath build from a directory of jar files.  The user can specify multiple jar directories as command line arguments; the desired start class is then loaded with an appropriate classloader and provided the remaining arguments.</description>
+
+  <build>
+    <finalName>bootstrap</finalName>
+    <plugins>
+	    <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+	        <artifactId>maven-jar-plugin</artifactId>
+	        <version>2.1</version>
+	        <configuration>
+	          <archive>
+	            <manifest>
+	              <mainClass>org.infodancer.bootstrap.Main</mainClass>  
+	            </manifest>
+	          </archive>
+	        </configuration>
+	      </plugin>
+	      <plugin>
+	         <artifactId>jdeb</artifactId>
+	         <groupId>org.vafer</groupId>
+	         <version>1.0</version>
+	         <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jdeb</goal>
+                    </goals>
+                    <configuration>
+                        <dataSet>
+                            <data>
+                                <src>${project.build.directory}/${project.build.finalName}.jar</src>
+                                <type>file</type>
+                                <mapper>
+                                  <type>perm</type>
+                                  <prefix>/opt/infodancer/lib</prefix>
+                                </mapper>
+                            </data>
+                        </dataSet>
+                    </configuration>
+                </execution>
+            </executions>
+	      </plugin>
+    </plugins>
+  </build>
+</project>
