@@ -9,7 +9,14 @@
   <name>bootstrap</name>
   <url>http://www.infodancer.org/srcdancer/project/bootstrap</url>
   <description>The bootstrap project is a way to start a java application with a classpath build from a directory of jar files.  The user can specify multiple jar directories as command line arguments; the desired start class is then loaded with an appropriate classloader and provided the remaining arguments.</description>
-
+  <dependencies>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.8.2</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>  
   <build>
     <finalName>bootstrap</finalName>
     <plugins>
@@ -40,4 +47,16 @@
 	      </plugin>
     </plugins>
   </build>
+  <distributionManagement>
+    <repository>
+      <id>archiva.internal</id>
+      <name>Internal Release Repository</name>
+      <url>http://infodancer.org:8080/repository/internal/</url>
+    </repository>
+    <snapshotRepository>
+      <id>archiva.snapshots</id>
+      <name>Internal Snapshot Repository</name>
+      <url>http://infodancer.org:8080/repository/snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 </project>
