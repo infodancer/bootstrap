@@ -7,8 +7,25 @@
   <packaging>jar</packaging>
 
   <name>bootstrap</name>
-  <url>http://www.infodancer.org/srcdancer/project/bootstrap</url>
-  <description>The bootstrap project is a way to start a java application with a classpath build from a directory of jar files.  The user can specify multiple jar directories as command line arguments; the desired start class is then loaded with an appropriate classloader and provided the remaining arguments.</description>
+  <url>https://github.com/infodancer/bootstrap</url>
+  <description>The bootstrap project is a way to start a java application with a classpath built from a directory of jar files.  The user can specify multiple jar directories as command line arguments; the desired start class is then loaded with an appropriate classloader and provided the remaining arguments.</description>
+  
+  <licenses>
+	<license>
+    	<name>The Apache License, Version 2.0</name>
+    	<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+  	</license>
+  </licenses>
+  
+  <developers>
+    <developer>
+      <name>Matthew Hunter</name>
+      <email>matthew@infodancer.org</email>
+      <organization>infodancer</organization>
+      <organizationUrl>http://www.infodancer.org</organizationUrl>
+    </developer>
+  </developers>
+  
   <dependencies>
       <dependency>
         <groupId>junit</groupId>
@@ -16,42 +33,106 @@
         <version>4.8.2</version>
         <scope>test</scope>
     </dependency>
-  </dependencies>  
+  </dependencies>
+    
+  <scm>
+  	<connection>scm:git:http://github.com/infodancer/sitemap.git</connection>
+  	<developerConnection>scm:git:http://infodancer@github.com/infodancer/sitemap.git</developerConnection>
+  	<url>http://github.com/infodancer/sitemap/tree/master</url>
+  </scm>
+  
+  <distributionManagement>
+   <snapshotRepository>
+    <id>ossrh</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+   </snapshotRepository>
+  </distributionManagement>
+  
   <build>
     <finalName>bootstrap</finalName>
     <plugins>
-	      <plugin>
-	         <artifactId>jdeb</artifactId>
-	         <groupId>org.vafer</groupId>
-	         <version>1.4</version>
-	         <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>jdeb</goal>
-                    </goals>
-                    <configuration>
-                        <dataSet>
-                            <data>
-                                <src>${project.build.directory}/${project.build.finalName}.jar</src>
-                                <type>file</type>
-                                <mapper>
-                                  <type>perm</type>
-                                  <prefix>/opt/infodancer/lib</prefix>
-                                </mapper>
-                            </data>
-                        </dataSet>
-                    </configuration>
-                </execution>
-            </executions>
-	      </plugin>
+         <plugin>
+  	  <groupId>org.sonatype.plugins</groupId>
+  		<artifactId>nexus-staging-maven-plugin</artifactId>
+  		<version>1.6.7</version>
+  		<extensions>true</extensions>
+  		<configuration>
+     		<serverId>ossrh</serverId>
+     		<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+     		<autoReleaseAfterClose>true</autoReleaseAfterClose>
+  		</configuration>
+	 </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+           <source>1.6</source>
+           <target>1.6</target>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
-  <distributionManagement>
-    <snapshotRepository>
-        <id>snapshots</id>
-        <name>71fd42ce8655-snapshots</name>
-        <url>http://artifactory.infodancer.org:8081/artifactory/libs-snapshot</url>
-    </snapshotRepository>
-  </distributionManagement>
+  
+    <profiles>
+  <profile> 
+    <id>release</id>
+    <build>
+     <plugins>
+      <plugin>
+      	<groupId>org.apache.maven.plugins</groupId>
+      	<artifactId>maven-source-plugin</artifactId>
+      	<version>2.2.1</version>
+      	<executions>
+        	<execution>
+          		<id>attach-sources</id>
+          		<goals>
+            		<goal>jar-no-fork</goal>
+          		</goals>
+        	</execution>
+      </executions>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-javadoc-plugin</artifactId>
+      <version>2.9.1</version>
+      <executions>
+        <execution>
+          <id>attach-javadocs</id>
+          <goals>
+            <goal>jar</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-gpg-plugin</artifactId>
+      <version>1.5</version>
+      <executions>
+        <execution>
+          <id>sign-artifacts</id>
+          <phase>verify</phase>
+          <goals>
+            <goal>sign</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
+    <plugin>
+	  	<groupId>org.apache.maven.plugins</groupId>
+  		<artifactId>maven-release-plugin</artifactId>
+  		<version>2.5.3</version>
+  		<configuration>
+    		<autoVersionSubmodules>true</autoVersionSubmodules>
+    		<useReleaseProfile>false</useReleaseProfile>
+    		<releaseProfiles>release</releaseProfiles>
+    		<goals>deploy</goals>
+  		</configuration>
+	 </plugin>
+    </plugins>
+    </build>
+  </profile>
+</profiles>
+  
 </project>
